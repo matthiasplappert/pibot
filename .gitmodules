@@ -1,0 +1,3 @@
+[submodule "vendor/keras"]
+	path = vendor/keras
+	url = https://github.com/fchollet/keras.git

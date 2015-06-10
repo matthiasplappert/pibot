@@ -1,0 +1,6 @@
+numpy
+scipy
+cython
+theano
+h5py
+
