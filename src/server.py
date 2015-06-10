@@ -3,10 +3,10 @@ import Pyro4
 
 
 class Agent(object):
-    def perceive(self, input):
-    	image = pickle.loads(input)
-        print image.shape
-        return "Hello"
+    def perceive(self, frame):
+    	frame = pickle.loads(frame)
+    	print frame.shape
+        return "fwd"
 
 
 def main():

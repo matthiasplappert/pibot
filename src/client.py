@@ -11,7 +11,7 @@ def main():
 		print('cannot open video capture session')
 		exit()
 
-	uri = 'PYRO:obj_0855fae648b54026adb872b6ae3fc970@localhost:60359'
+	uri = 'PYRO:obj_bafadca4739e4d728f57d79307acc004@localhost:60964'
 	agent = Pyro4.Proxy(uri)
 	while True:
 		succ, frame = vc.read()
