@@ -14,9 +14,11 @@ import actions
 
 class Agent(object):
     def __init__(self):
+        self.path = '/Users/matze/Desktop/current.png'
+
+        self._last_score = 0
         self._last_frame = None
         self._last_frame_lock = threading.Lock()
-        self.path = '/Users/matze/Desktop/current.png'
         self._config = {
             'image_gray': True,
             'image_crop': True,
@@ -41,13 +43,18 @@ class Agent(object):
 
     def perceive(self, frame):
         frame = pickle.loads(frame)
-        frame = frame.astype(float) / 255.0  # normalize to [0,1]
+        #frame = frame.astype(float) / 255.0  # normalize to [0,1]
         self.last_frame = frame
 
-        # Calculate average brightness
-        # TODO: add some sort of flexible interface that calculates a score from the frame
-        avg = np.average(frame)
-        print avg
+        # Calculate histogram over 16 bins. We then select the top bin. Our agent likes light, so the more
+        # pixels we have in the top bin, the bigger a bright spot in the image is. Our agent is very happy if the
+        # entire image is just a bright spot.
+        histogram = cv2.calcHist([frame], [0], None, [16], [0, 256])[:, 0]
+        score = histogram[-1]
+        delta = score - self._last_score
+        self._last_score = score
+
+        print('score=%d (delta=%d)' % (score, delta))
 
         return actions.STOP
 
