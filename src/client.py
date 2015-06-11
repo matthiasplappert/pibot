@@ -45,7 +45,11 @@ def main(args):
         if config['image_resize'] is not None:
             frame = cv2.resize(frame, config['image_resize'])
 
-        # TODO: should this be scaled to [0,1]?
+        # Scale to interval
+        if config['image_interval'] is not None:
+            # TODO: allow different interval
+            frame /= 255.0
+        print np.min(frame), np.max(frame)
 
         action = agent.perceive(pickle.dumps(frame))
         print('performing action %d' % action)
