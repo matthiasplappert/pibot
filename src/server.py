@@ -39,8 +39,13 @@ class Agent(object):
 
 def main():
     agent = Agent()
+
+    # Configure Pyro
     daemon = Pyro4.Daemon('192.168.1.57')
     uri = daemon.register(agent)
+    ns = Pyro4.locateNS()
+    ns.register('agent', uri)
+
     print("Ready. Object uri =", uri)
     daemon.requestLoop()
 

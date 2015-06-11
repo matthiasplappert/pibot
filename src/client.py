@@ -1,4 +1,3 @@
-import argparse
 import pickle
 import timeit
 
@@ -9,9 +8,9 @@ import numpy as np
 import actions
 
 
-def main(args):
+def main():
     # Connect to server, which runs our agent (for performance reasons only)
-    agent = Pyro4.Proxy(args.uri)
+    agent = Pyro4.Proxy('PYRONAME:agent')
     config = agent.config()
     print('client config: %s' % config)
 
@@ -58,11 +57,5 @@ def main(args):
     vc.release()
 
 
-def get_parser():
-    parser = argparse.ArgumentParser(description='Client control for nn-robot.')
-    parser.add_argument('uri', help='the URI for Pyro4 of form PYRO:<obj>@<host>:<port>')
-    return parser
-
-
 if __name__ == '__main__':
-    main(get_parser().parse_args())
+    main()
