@@ -48,6 +48,7 @@ def main(args):
         # Scale to interval
         if config['image_interval'] is not None:
             # TODO: allow different interval
+            frame = frame.astype(float)
             frame /= 255.0
         print np.min(frame), np.max(frame)
 
