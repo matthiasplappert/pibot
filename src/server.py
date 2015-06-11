@@ -4,7 +4,6 @@ import threading
 
 import cv2
 import Pyro4
-import scipy.misc
 import numpy as np
 import Pyro4.core
 import Pyro4.naming
