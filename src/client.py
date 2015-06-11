@@ -10,17 +10,17 @@ import actions
 
 
 def main(args):
+    # Connect to server, which runs our agent (for performance reasons only)
+    agent = Pyro4.Proxy(args.uri)
+    config = agent.config()
+    print('client config: %s' % config)
+
+    # Open eyes
     vc = cv2.VideoCapture(0)
     if not vc.isOpened():
-        print('cannot open video capture session')
-        exit()
+        exit('cannot open video capture session')
 
-    uri = args.uri
-    agent = Pyro4.Proxy(uri)
-    config = agent.client_config()
-    print('client config: %s' % config)
-    print('running client ...\n')
-
+    print('running agent ...\n')
     while True:
         start = timeit.default_timer()
         success, frame = vc.read()
@@ -45,13 +45,6 @@ def main(args):
         if config['image_resize'] is not None:
             frame = cv2.resize(frame, config['image_resize'])
 
-        # Scale to interval
-        if config['image_interval'] is not None:
-            # TODO: allow different interval
-            frame = frame.astype(float)
-            frame /= 255.0
-        print np.min(frame), np.max(frame)
-
         action = agent.perceive(pickle.dumps(frame))
         print('performing action %d' % action)
 
@@ -61,7 +54,7 @@ def main(args):
             break
         # TODO: perform physical action
 
-    print('client shutting down ...')
+    print('agent shutting down ...')
     vc.release()
 
 
