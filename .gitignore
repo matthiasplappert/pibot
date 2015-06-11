@@ -1,6 +1,7 @@
 # Misc
 .DS_Store
 pip-selfcheck.json
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -23,6 +24,7 @@ eggs/
 include/
 lib/
 lib64/
+man/
 parts/
 sdist/
 var/
