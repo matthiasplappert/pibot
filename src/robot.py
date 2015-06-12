@@ -29,7 +29,7 @@ class Agent(object):
         self.vc.release()
         self.vc = None
 
-    def perceive(self, grayscale=True, crop=True, resize=(84, 84)):
+    def perceive(self, grayscale=True, crop=True, resize=(100, 100)):
         if self.vc is None:
             return None
 

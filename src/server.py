@@ -1,5 +1,6 @@
 import argparse
 import pickle
+import timeit
 
 import cv2
 import Pyro4
@@ -14,7 +15,8 @@ def main(args):
     prev_score = 0
     agent = Pyro4.Proxy('PYRONAME:' + args.agent)
     while True:
-        frame = pickle.loads(agent.perceive())
+        start = timeit.default_timer()
+        frame = pickle.loads(agent.perceive(grayscale=True, crop=True, resize=(84, 84)))
         if frame is None:
             print('skipping frame')
             continue
@@ -37,6 +39,8 @@ def main(args):
         print('score=%d (delta=%d)' % (score, delta))
 
         agent.perform_action(actions.STOP)
+        duration = timeit.default_timer() - start
+        print('perceive-action cycle took %fs\n' % duration)
 
     if args.debug_frames:
         cv2.destroyWindow()
