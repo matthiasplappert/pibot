@@ -65,8 +65,10 @@ def main(args):
     agent = Agent()
     if not agent.open_eyes():
         exit('agent could not open eyes')
+
     # Read a frame to enable the web cam and give it some time to adjust to the lightning conditions
-    agent.perceive()
+    if agent.perceive() is None:
+        exit('agent could not open eyes')
     time.sleep(5.0)
     print('done!\n')
 
