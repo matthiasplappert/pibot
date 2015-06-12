@@ -70,6 +70,8 @@ def main(args):
     if agent.perceive() is None:
         exit('agent could not open eyes')
     time.sleep(5.0)
+    if agent.perceive() is None:
+        exit('agent could not open eyes')
     print('done!\n')
 
     print('running event loop ...')
