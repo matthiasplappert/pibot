@@ -5,12 +5,16 @@ import time
 import cv2
 import numpy as np
 
-import util
+from util import pyro_event_loop, Action
 
 
 class Agent(object):
     def __init__(self):
         self.vc = None
+
+    @property
+    def get_actions(self):
+        return [Action.FORWARD, Action.BACKWARD, Action.IDLE, Action.TURN_LEFT, Action.TURN_RIGHT]
 
     def open_eyes(self):
         if self.vc is not None:
@@ -63,19 +67,13 @@ class Agent(object):
 def main(args):
     print('initializing agent "%s" ...' % args.name)
     agent = Agent()
-    if not agent.open_eyes():
-        exit('agent could not open eyes')
-
-    # Read a frame to enable the web cam and give it some time to adjust to the lightning conditions
-    if agent.perceive() is None:
-        exit('agent could not open eyes')
-    time.sleep(5.0)
-    if agent.perceive() is None:
+    if not agent.open_eyes() or agent.perceive() is None:
         exit('agent could not open eyes')
     print('done!\n')
 
-    print('running event loop ...')
-    util.pyro_event_loop(args.name, agent)
+    print('Pyro4 name server is listening on port %d' % args.port)
+    print('starting event loop ...')
+    pyro_event_loop(args.name, agent, ns_port=args.port)
     print('shutting down agent ...')
     agent.close_eyes()
 
@@ -83,6 +81,7 @@ def main(args):
 def get_parser():
     parser = argparse.ArgumentParser(description='Server for nn-robot.')
     parser.add_argument('--name', help='name of the agent', default='nn-robot')
+    parser.add_argument('--port', help='port of the name server', default=9090, type=int)
     return parser
 
 

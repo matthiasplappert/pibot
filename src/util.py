@@ -5,11 +5,15 @@ import Pyro4.naming
 import Pyro4.socketutil
 
 
-def pyro_event_loop(name, obj, timeout=3.0, callback=None):
+class Action(object):
+    IDLE, FORWARD, BACKWARD, TURN_LEFT, TURN_RIGHT = range(5)
+
+
+def pyro_event_loop(name, obj, timeout=3.0, ns_port=9090, callback=None):
     Pyro4.config.SERVERTYPE = 'thread'
     my_ip = Pyro4.socketutil.getIpAddress(None, workaround127=True)
 
-    nameserverUri, nameserverDaemon, broadcastServer = Pyro4.naming.startNS(host=my_ip)
+    nameserverUri, nameserverDaemon, broadcastServer = Pyro4.naming.startNS(host=my_ip, port=ns_port)
     assert broadcastServer is not None
     daemon = Pyro4.core.Daemon(host=my_ip)
     serverUri = daemon.register(obj)

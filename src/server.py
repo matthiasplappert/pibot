@@ -5,7 +5,7 @@ import timeit
 import cv2
 import Pyro4
 
-import actions
+from util import Action
 
 
 def main(args):
@@ -38,7 +38,7 @@ def main(args):
 
         print('score=%d (delta=%d)' % (score, delta))
 
-        agent.perform_action(actions.STOP)
+        agent.perform_action(Action.IDLE)
         duration = timeit.default_timer() - start
         print('perceive-action cycle took %fs\n' % duration)
 
