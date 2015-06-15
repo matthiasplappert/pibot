@@ -60,7 +60,7 @@ end
 -- Function plays `action` in the game and return game state.
 function gameEnv:_step(action)
     py.eval('agent.perform_action(0)')
-    local frame = py.eval('pickle.loads(agent.perceive(grayscale=True, crop=True, resize=(84, 84))')
+    local frame = py.eval('pickle.loads(agent.perceive(grayscale=True, crop=True, resize=(84, 84)))')
     print(frame)
 
     -- return x.data, x.reward, x.terminal, x.lives
