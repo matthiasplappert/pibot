@@ -1,8 +1,15 @@
 -- The GameEnvironment class.
 local gameEnv = torch.class('dqn.GameEnvironment')
+local py = require('fb.python')
 
 
 function gameEnv:__init(_opt)
+    py.exec([=[
+import Pyro4
+import pickle
+agent = Pyro4.Proxy('PYRONAME:nn-robot@192.168.1.57:9090')
+]=])
+    
     local _opt = _opt or {}
     -- defaults to emulator speed
     self.game_path      = _opt.game_path or '.'
@@ -15,6 +22,7 @@ end
 
 
 function gameEnv:_updateState(frame, reward, terminal, lives)
+    self._state.frame        = frame
     self._state.reward       = reward
     self._state.terminal     = terminal
     self._state.prev_lives   = self._state.lives or lives
@@ -24,8 +32,7 @@ end
 
 
 function gameEnv:getState()
-    -- return self._state.observation, self._state.reward, self._state.terminal
-    return torch.FloatTensor(84, 84), 0, false
+    return self._state.observation, self._state.reward, self._state.terminal
 end
 
 
@@ -52,8 +59,12 @@ end
 
 -- Function plays `action` in the game and return game state.
 function gameEnv:_step(action)
+    py.eval('agent.perform_action(0)')
+    local frame = py.eval('pickle.loads(agent.perceive(grayscale=True, crop=True, resize=(84, 84))')
+    print(frame)
+
     -- return x.data, x.reward, x.terminal, x.lives
-    return torch.FloatTensor(84, 84), 0, false, 1
+    return frame, 0, false, 1
 end
 
 
