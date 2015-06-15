@@ -24,7 +24,6 @@ end
 
 
 function gameEnv:getState()
-    print('getState called')
     -- return self._state.observation, self._state.reward, self._state.terminal
     return torch.FloatTensor(84, 84), 0, false
 end
@@ -53,7 +52,6 @@ end
 
 -- Function plays `action` in the game and return game state.
 function gameEnv:_step(action)
-    print('_step called')
     -- return x.data, x.reward, x.terminal, x.lives
     return torch.FloatTensor(84, 84), 0, false, 1
 end
@@ -125,14 +123,12 @@ end
 from the current game.
 ]]
 function gameEnv:nObsFeature()
-    print('nObsFeature called')
     return 84 * 84 * 1 -- 84 x 84 pixels and one channel
 end
 
 
 -- Function returns a table with valid actions in the current game.
 function gameEnv:getActions()
-    print('getActions called')
     -- simply return a list of indexes that represent actions
     return {0, 1, 2, 3}
 end
