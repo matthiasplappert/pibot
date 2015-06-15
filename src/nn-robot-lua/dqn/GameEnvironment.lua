@@ -6,9 +6,8 @@ local py = require('fb.python')
 function gameEnv:__init(_opt)
     -- TODO: make this configurable
     py.exec([=[
-import Pyro4
-import pickle
-agent = Pyro4.Proxy('PYRONAME:nn-robot@192.168.1.57:9090')
+import ..game
+game = game.GameEnvironment('nn-robot', host='192.168.1.57', port=9090')
 ]=])
     
     local _opt = _opt or {}
@@ -60,12 +59,9 @@ end
 
 -- Function plays `action` in the game and return game state.
 function gameEnv:_step(action)
-    py.eval('agent.perform_action(' .. action .. ')')
-    local frame = py.eval('pickle.loads(agent.perceive(grayscale=True, crop=True, resize=(84, 84)))')
-    print(frame)
-
+    local result = py.eval('game.step(' .. action .. ')')
     -- return x.data, x.reward, x.terminal, x.lives
-    return frame, 0, false, 1
+    return result[1], result[2], result[3], result[4]
 end
 
 
