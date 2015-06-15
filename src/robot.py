@@ -24,6 +24,12 @@ class Agent(object):
             self.vc = cv2.VideoCapture(0)
         except:
             return False
+
+        # Configure settings
+        default_width = self.vc.get(cv2.cv.CV_CAP_PROP_FRAME_WIDTH)
+        default_height = self.vc.get(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT)
+        self.vc.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH, 84 * (default_width / default_height))
+        self.vc.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT, 84)
         return self.vc.isOpened()
 
     def close_eyes(self):
@@ -37,6 +43,7 @@ class Agent(object):
             return None
 
         success, frame = self.vc.read()
+        print frame.shape
         if not success:
             return None
 
