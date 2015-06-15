@@ -1,3 +1,6 @@
 [submodule "vendor/keras"]
 	path = vendor/keras
 	url = https://github.com/fchollet/keras.git
+[submodule "vendor/dqn"]
+	path = vendor/dqn
+	url = https://github.com/soumith/deepmind-atari.git
