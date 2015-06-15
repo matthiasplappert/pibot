@@ -4,6 +4,7 @@ local py = require('fb.python')
 
 
 function gameEnv:__init(_opt)
+    -- TODO: make this configurable
     py.exec([=[
 import Pyro4
 import pickle
@@ -59,7 +60,7 @@ end
 
 -- Function plays `action` in the game and return game state.
 function gameEnv:_step(action)
-    py.eval('agent.perform_action(0)')
+    py.eval('agent.perform_action(' .. action .. ')')
     local frame = py.eval('pickle.loads(agent.perceive(grayscale=True, crop=True, resize=(84, 84)))')
     print(frame)
 
