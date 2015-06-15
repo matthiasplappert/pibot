@@ -1,7 +1,3 @@
 numpy
 scipy
-cython
-theano
-h5py
 Pyro4
-lupa
