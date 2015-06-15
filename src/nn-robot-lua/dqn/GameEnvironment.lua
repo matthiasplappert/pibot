@@ -32,7 +32,7 @@ end
 
 
 function gameEnv:getState()
-    return self._state.observation, self._state.reward, self._state.terminal
+    return self._state.frame, self._state.reward, self._state.terminal
 end
 
 
