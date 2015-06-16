@@ -31,7 +31,6 @@ class GameEnvironment(object):
         if curr_score == 0:
             curr_score = 1
         delta = curr_score - self.prev_score
-        print abs(delta) / curr_score
         reward = 0
         if abs(delta) / curr_score > 0.1:
             if delta > 0:

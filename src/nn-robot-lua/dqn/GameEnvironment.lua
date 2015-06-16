@@ -10,7 +10,6 @@ function readAll(file)
 end
 
 function gameEnv:__init(_opt)
-    print(_opt.game_path)
     local py_src = readAll(_opt.game_path)
     py.exec(py_src)
     -- TODO: make this configurable
