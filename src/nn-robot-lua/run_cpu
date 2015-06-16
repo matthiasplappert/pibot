@@ -6,7 +6,7 @@ fi
 ENV=$1
 FRAMEWORK="alewrap"
 
-game_path=$PWD"/roms/"
+game_path=$PWD"/../game.py"
 env_params="useRGB=true"
 agent="NeuralQLearner"
 n_replay=1
