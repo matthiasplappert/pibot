@@ -13,7 +13,7 @@ def main(args):
         cv2.namedWindow('debug-frames')
 
     prev_score = 0
-    game = GameEnvironment(args.agent)
+    game = GameEnvironment(args.agent, host=args.host, port=args.port)
     while True:
         start = timeit.default_timer()
         frame, reward, terminal, lives = game.step(Action.IDLE)
@@ -33,6 +33,8 @@ def main(args):
 def get_parser():
     parser = argparse.ArgumentParser(description='Server for nn-robot.')
     parser.add_argument('--debug-frames', action='store_true', help='display each frame')
+    parser.add_argument('--host', help='host of the robot, e.g. 192.168.1.2', type=str, default=None)
+    parser.add_argument('--port', help='port of the robot, e.g. 9090', type=int, default=9090)
     parser.add_argument('agent', help='name of the agent')
     return parser
 
