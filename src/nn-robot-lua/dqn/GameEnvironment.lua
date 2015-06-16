@@ -175,6 +175,7 @@ end
 
 -- Function returns a table with valid actions in the current game.
 function gameEnv:getActions()
+    return py.eval('game.get_actions()')
     -- simply return a list of indexes that represent actions
     return {0, 1, 2, 3}
 end

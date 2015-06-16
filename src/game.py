@@ -43,3 +43,6 @@ class GameEnvironment(object):
         terminal = False
         lives = 1
         return frame.astype(float) / 255.0, reward, terminal, lives
+
+    def get_actions(self):
+        return self.agent.get_actions()
