@@ -1,9 +1,17 @@
 import argparse
 import logging
+import time
 
 import cv2
 import numpy as np
 import Pyro4
+
+# Attempt to load gopigo, which is not available everywhere
+gopigo_available = True
+try:
+    import gopigo
+except ImportError:
+    gopigo_available = False
 
 from util import pyro_event_loop, Action
 
@@ -58,9 +66,32 @@ class Agent(object):
             frame = cv2.resize(frame, resize)
         return frame
 
-    def perform_action(self, action):
-        # TODO: take physicial action
-        print('performing action %d' % action)
+    def perform_action(self, action, duration=0.1):
+        if not gopigo_available:
+            logging.info('simulating action %d' % action)
+            return
+        logging.info('performing action %d' % action)
+
+        # Translate to action
+        if action == Action.TURN_LEFT:
+            action_call = gopigo.left
+        elif action == Action.TURN_RIGHT:
+            action_call = gopigo.right
+        elif action == Action.FORWARD:
+            action_call = gopigo.fwd
+        elif action == Action.BACKWARD:
+            action_call = gopigo.bwd
+        elif action == Action.IDLE:
+            action_call = gopigo.stop
+        else:
+            action_call = None
+        if action_call is None:
+            raise ValueError('unknown action %d' % action)
+
+        # Perform action for `duration` seconds and stop afterwards
+        action_call()
+        time.sleep(duration)
+        gopigo.stop()
 
 
 def main(args):
@@ -88,4 +119,6 @@ def get_parser():
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
+    if not gopigo_available:
+        logging.warning('gopigo library not available, resorting to simulation')
     main(get_parser().parse_args())
