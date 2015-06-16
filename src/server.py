@@ -1,9 +1,8 @@
 import argparse
-import pickle
+import logging
 import timeit
 
 import cv2
-import Pyro4
 
 from util import Action
 from game import GameEnvironment
@@ -39,4 +38,5 @@ def get_parser():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     main(get_parser().parse_args())

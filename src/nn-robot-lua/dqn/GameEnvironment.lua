@@ -45,7 +45,7 @@ class GameEnvironment(object):
         terminal = False
         lives = 1
         return frame.astype(float) / 255.0, reward, terminal, lives
-game = game.GameEnvironment('nn-robot', host='192.168.1.57', port=9090')
+game = GameEnvironment('nn-robot', host='192.168.1.57', port=9090)
 ]=])
     
     local _opt = _opt or {}

@@ -1,5 +1,6 @@
 import argparse
 import pickle
+import logging
 
 import cv2
 import numpy as np
@@ -70,9 +71,8 @@ def main(args):
         exit('agent could not open eyes')
     print('done!\n')
 
-    print('Pyro4 name server is listening on port %d' % args.port)
     print('starting event loop ...')
-    pyro_event_loop(args.name, agent, ns_port=args.port)
+    pyro_event_loop(args.name, agent, ip=args.ip, port=args.port)
     print('shutting down agent ...')
     agent.close_eyes()
 
@@ -81,8 +81,10 @@ def get_parser():
     parser = argparse.ArgumentParser(description='Server for nn-robot.')
     parser.add_argument('--name', help='name of the agent', default='nn-robot')
     parser.add_argument('--port', help='port of the name server', default=9090, type=int)
+    parser.add_argument('--ip', help='ip of the name server', default=None, type=str)
     return parser
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     main(get_parser().parse_args())
