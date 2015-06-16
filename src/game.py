@@ -1,11 +1,12 @@
-import pickle
-
 import Pyro4
 import cv2
 
 
 class GameEnvironment(object):
     def __init__(self, name, host=None, port=None, grayscale=True, crop=True, resize=(84, 84)):
+        # Use pickle for serialization
+        Pyro4.config.SERIALIZER = 'pickle'
+
         uri = 'PYRONAME:' + name
         if host is not None:
             uri += '@' + str(host)
@@ -19,7 +20,7 @@ class GameEnvironment(object):
 
     def step(self, action):
         self.agent.perform_action(action)
-        frame = pickle.loads(self.agent.perceive(grayscale=self.grayscale, crop=self.crop, resize=self.resize))
+        frame = self.agent.perceive(grayscale=self.grayscale, crop=self.crop, resize=self.resize)
 
         # Calculate histogram over 16 bins. We then select the top bin. Our agent likes light, so the more
         # pixels we have in the top bin, the bigger a bright spot in the image is. Our agent is very happy if the

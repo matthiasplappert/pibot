@@ -1,9 +1,9 @@
 import argparse
-import pickle
 import logging
 
 import cv2
 import numpy as np
+import Pyro4
 
 from util import pyro_event_loop, Action
 
@@ -12,7 +12,6 @@ class Agent(object):
     def __init__(self):
         self.vc = None
 
-    @property
     def get_actions(self):
         return [Action.FORWARD, Action.BACKWARD, Action.IDLE, Action.TURN_LEFT, Action.TURN_RIGHT]
 
@@ -57,7 +56,7 @@ class Agent(object):
         # Resize
         if resize is not None:
             frame = cv2.resize(frame, resize)
-        return pickle.dumps(frame)  # Pyro4 does not support numpy
+        return frame
 
     def perform_action(self, action):
         # TODO: take physicial action
@@ -70,6 +69,8 @@ def main(args):
     if not agent.open_eyes() or agent.perceive() is None:
         exit('agent could not open eyes')
     print('done!\n')
+
+    Pyro4.config.SERIALIZERS_ACCEPTED.add('pickle')
 
     print('starting event loop ...')
     pyro_event_loop(args.name, agent, ip=args.ip, port=args.port)
