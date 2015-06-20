@@ -13,7 +13,7 @@ function gameEnv:__init(_opt)
     local py_src = readAll(_opt.game_path)
     py.exec(py_src)
     -- TODO: make this configurable
-    py.exec('game = GameEnvironment(\'nn-robot\', host=\'192.168.1.4\', port=9090)')
+    py.exec('game = GameEnvironment(\'nn-robot\', host=\'192.168.1.11\', port=9090)')
     
     local _opt = _opt or {}
     -- defaults to emulator speed
