@@ -28,13 +28,13 @@ class GameEnvironment(object):
 
     def debug_step(self, action):
         self.agent.perform_action(action)
-        frame = self.agent.perceive(grayscale=self.grayscale, crop=self.crop, resize=self.resize)
+        #frame = self.agent.perceive(grayscale=self.grayscale, crop=self.crop, resize=self.resize)
 
         if action == 3:
-            frame = np.ones(frame.shape)
+            frame = np.ones(self.resize)
             reward = 1
         else:
-            frame = np.zeros(frame.shape)
+            frame = np.zeros(self.resize)
             reward = 0
         return frame, reward, False, 1, frame
 

@@ -11,8 +11,8 @@ env_params="useRGB=true"
 agent="NeuralQLearner"
 n_replay=1
 netfile="\"convnet_atari3\""
-update_freq=4
-actrep=4
+update_freq=1
+actrep=1
 discount=0.99
 seed=1
 learn_start=50000
