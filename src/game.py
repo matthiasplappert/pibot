@@ -32,11 +32,13 @@ class GameEnvironment(object):
         self.agent.perform_action(action)
         frame = self.agent.perceive(grayscale=self.grayscale, crop=self.crop, resize=self.resize)
 
-        if action == Action.TURN_LEFT:
+        if action == 3:
+            frame = np.ones(frame.shape)
             reward = 1
         else:
+            frame = np.zeros(frame.shape)
             reward = 0
-        return frame, reward, False, 1, np.zeros(frame.shape)
+        return frame, reward, False, 1, frame
 
         # Calculate current score:
         # Step 1: Apply Gaussian blur to decrease noise
