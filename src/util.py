@@ -10,15 +10,15 @@ class Action(object):
     IDLE, FORWARD, BACKWARD, TURN_LEFT, TURN_RIGHT = range(5)
 
 
-def pyro_event_loop(name, obj, timeout=3.0, ip=None, port=9090, callback=None):
+def pyro_event_loop(name, obj, timeout=3.0, host=None, port=9090, callback=None):
     Pyro4.config.SERVERTYPE = 'thread'
-    if ip is None:
-        ip = Pyro4.socketutil.getIpAddress(None, workaround127=True)
+    if host is None:
+        host = Pyro4.socketutil.getIpAddress(None, workaround127=True)
 
-    nameserverUri, nameserverDaemon, broadcastServer = Pyro4.naming.startNS(host=ip, port=port)
+    nameserverUri, nameserverDaemon, broadcastServer = Pyro4.naming.startNS(host=host, port=port)
     logging.info('name server uri: %s', nameserverUri)
     assert broadcastServer is not None
-    daemon = Pyro4.core.Daemon(host=ip)
+    daemon = Pyro4.core.Daemon(host=host)
     serverUri = daemon.register(obj)
     nameserverDaemon.nameserver.register(name, serverUri)
 

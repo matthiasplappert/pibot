@@ -104,7 +104,7 @@ def main(args):
     Pyro4.config.SERIALIZERS_ACCEPTED.add('pickle')
 
     print('starting event loop ...')
-    pyro_event_loop(args.name, agent, ip=args.ip, port=args.port)
+    pyro_event_loop(args.name, agent, host=args.host, port=args.port)
     print('shutting down agent ...')
     agent.close_eyes()
 
@@ -113,7 +113,7 @@ def get_parser():
     parser = argparse.ArgumentParser(description='Server for nn-robot.')
     parser.add_argument('--name', help='name of the agent', default='nn-robot')
     parser.add_argument('--port', help='port of the name server', default=9090, type=int)
-    parser.add_argument('--ip', help='ip of the name server', default=None, type=str)
+    parser.add_argument('--host', help='host of the name server', default=None, type=str)
     return parser
 
 
