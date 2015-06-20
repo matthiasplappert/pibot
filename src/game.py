@@ -4,6 +4,8 @@ import Pyro4
 import cv2
 import numpy as np
 
+from util import Action
+
 
 class GameEnvironment(object):
     def __init__(self, name, host=None, port=None, grayscale=True, crop=True, resize=(84, 84), sliding_window=5):
@@ -29,6 +31,12 @@ class GameEnvironment(object):
     def debug_step(self, action):
         self.agent.perform_action(action)
         frame = self.agent.perceive(grayscale=self.grayscale, crop=self.crop, resize=self.resize)
+
+        if action == Action.TURN_LEFT:
+            reward = 1
+        else:
+            reward = 0
+        return frame, reward, False, 1, np.zeros(frame.shape)
 
         # Calculate current score:
         # Step 1: Apply Gaussian blur to decrease noise
