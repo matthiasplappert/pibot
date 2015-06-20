@@ -4,11 +4,9 @@ import Pyro4
 import cv2
 import numpy as np
 
-from util import Action
-
 
 class GameEnvironment(object):
-    def __init__(self, name, host=None, port=None, grayscale=True, crop=True, resize=(84, 84), sliding_window=5):
+    def __init__(self, name, host=None, port=None, grayscale=True, crop=True, resize=(84, 84), sliding_window=0):
         # Use pickle for serialization
         Pyro4.config.SERIALIZER = 'pickle'
 
