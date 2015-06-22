@@ -19,6 +19,9 @@ from util import pyro_event_loop, Action
 class Agent(object):
     def __init__(self):
         self.vc = None
+        self.counts = np.zeros(len(self.get_actions()))
+        self.episode_counts = np.zeros(len(self.get_actions()))
+        self.steps = 0
 
     def get_actions(self):
         return [Action.FORWARD, Action.BACKWARD, Action.IDLE, Action.TURN_LEFT, Action.TURN_RIGHT]
@@ -67,6 +70,13 @@ class Agent(object):
         return frame
 
     def perform_action(self, action, duration=0.1):
+        self.counts[action] += 1
+        self.episode_counts[action] += 1
+        self.steps += 1
+        if self.steps % 100 == 0:
+            logging.info('performed %d steps\t%s\t%s' % (self.steps, self.episode_counts, self.counts))
+            self.episode_counts[:] = 0
+
         if not gopigo_available:
             logging.info('simulating action %d' % action)
             return

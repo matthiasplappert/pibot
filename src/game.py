@@ -1,12 +1,10 @@
-from collections import deque
-
 import Pyro4
 import cv2
 import numpy as np
 
 
 class GameEnvironment(object):
-    def __init__(self, name, host=None, port=None, grayscale=True, crop=True, resize=(84, 84), sliding_window=0):
+    def __init__(self, name, host=None, port=None, grayscale=True, crop=True, resize=(84, 84)):
         # Use pickle for serialization
         Pyro4.config.SERIALIZER = 'pickle'
 
@@ -19,7 +17,6 @@ class GameEnvironment(object):
         self.grayscale = grayscale
         self.crop = crop
         self.resize = resize
-        self.scores = deque(maxlen=sliding_window)
 
     def step(self, action):
         # Reward should be either -1, 0, or 1
@@ -28,15 +25,7 @@ class GameEnvironment(object):
 
     def debug_step(self, action):
         self.agent.perform_action(action)
-        #frame = self.agent.perceive(grayscale=self.grayscale, crop=self.crop, resize=self.resize)
-
-        if action == 3:
-            frame = np.ones(self.resize)
-            reward = 1
-        else:
-            frame = np.zeros(self.resize)
-            reward = 0
-        return frame, reward, False, 1, frame
+        frame = self.agent.perceive(grayscale=self.grayscale, crop=self.crop, resize=self.resize)
 
         # Calculate current score:
         # Step 1: Apply Gaussian blur to decrease noise
@@ -45,26 +34,13 @@ class GameEnvironment(object):
         processed_frame = cv2.GaussianBlur(frame, (21, 21), 0)
         _, processed_frame = cv2.threshold(processed_frame, 200, 255, cv2.THRESH_BINARY)
         processed_frame = processed_frame.astype(float) / 255.0
+
+        # Calculate reward and related values
         score = np.average(processed_frame)  # score in [0,1]
-        if score == 0.0:
-            # Use a very small score to avoid division by zero
-            score = np.finfo(float).eps
-
-        # Calculate reward: We use a sliding window to smooth the score function and remove jitter. If the sliding
-        # window is not full yet, assume a reward of 0 and wait until it fills
         reward = 0
-        if len(self.scores) == self.scores.maxlen:
-            # Only calculate reward if we have enough data in our sliding window
-            prev_score = np.average(self.scores)
-            delta = score - prev_score
-            if abs(delta) / score > 0.1:
-                if delta > 0:
-                    reward = 1
-                else:
-                    reward = -1
-        self.scores.append(score)
-
-        # TODO: maybe use those later?
+        if score > 0.05:
+            # At least 5% of the image are bright, reward the agent
+            reward = 1
         terminal = False
         lives = 1
         return frame.astype(float) / 255.0, reward, terminal, lives, processed_frame
