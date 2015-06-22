@@ -33,7 +33,7 @@ class GameEnvironment(object):
         else:
             processed_frame = np.zeros(frame.shape)
             reward = 0
-        return frame.astype(float) / 255.0, reward, False, lives, processed_frame
+        return frame.astype(float) / 255.0, reward, False, 1, processed_frame
 
         # Calculate current score:
         # Step 1: Apply Gaussian blur to decrease noise
