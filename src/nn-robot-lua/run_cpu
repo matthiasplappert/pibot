@@ -15,7 +15,7 @@ update_freq=1
 actrep=1
 discount=0.99
 seed=1
-learn_start=50000
+learn_start=1000
 pool_frms_type="\"max\""
 pool_frms_size=2
 initial_priority="false"
@@ -33,7 +33,7 @@ steps=50000000
 eval_freq=250000
 eval_steps=125000
 prog_freq=5000
-save_freq=125000
+save_freq=5000
 gpu=-1
 random_starts=30
 pool_frms="type="$pool_frms_type",size="$pool_frms_size
