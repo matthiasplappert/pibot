@@ -1,6 +1,7 @@
 import argparse
 import logging
 import timeit
+import time
 import curses
 
 import cv2
@@ -55,6 +56,7 @@ def main(args):
         cv2.imshow('frame', frame)
         cv2.imshow('processed-frame', processed_frame)
         cv2.waitKey(1)
+        if args.interval > 0: time.sleep(args.interval)
 
     # Tear down frame
     cv2.destroyWindow('frame')
@@ -65,6 +67,7 @@ def get_parser():
     parser = argparse.ArgumentParser(description='Server for nn-robot.')
     parser.add_argument('--host', help='host of the robot, e.g. 192.168.1.2', type=str, default=None)
     parser.add_argument('--port', help='port of the robot, e.g. 9090', type=int, default=9090)
+    parser.add_argument('--interval', help='update interval in seconds', type=int, default=0)
     parser.add_argument('agent', help='name of the agent')
     return parser
 
