@@ -75,6 +75,7 @@ local nrewards
 local nepisodes
 local episode_reward
 
+local train_reward = 0
 local screen, reward, terminal = game_env:getState()
 
 print("Iteration ..", step)
@@ -92,11 +93,17 @@ while step < opt.steps do
             screen, reward, terminal = game_env:newGame()
         end
     end
+    if reward ~= 0 then
+        print("current reward: ", reward)
+    end
+    train_reward = train_reward + reward
 
     if step % opt.prog_freq == 0 then
         assert(step==agent.numSteps, 'trainer step: ' .. step ..
                 ' & agent.numSteps: ' .. agent.numSteps)
         print("Steps: ", step)
+        print("Reward: ", train_reward)
+        train_reward = 0
         agent:report()
         collectgarbage()
     end

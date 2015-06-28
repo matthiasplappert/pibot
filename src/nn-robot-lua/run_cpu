@@ -32,8 +32,8 @@ agent_params="lr="$lr",ep=1,ep_end="$eps_end",ep_endt="$eps_endt",discount="$dis
 steps=50000000
 eval_freq=250000
 eval_steps=125000
-prog_freq=1000
-save_freq=1000
+prog_freq=500
+save_freq=500
 gpu=-1
 random_starts=30
 pool_frms="type="$pool_frms_type",size="$pool_frms_size

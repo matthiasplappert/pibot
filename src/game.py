@@ -27,14 +27,6 @@ class GameEnvironment(object):
         self.agent.perform_action(action)
         frame = self.agent.perceive(grayscale=self.grayscale, crop=self.crop, resize=self.resize)
 
-        if action == 3:
-            processed_frame = np.ones(frame.shape)
-            reward = 1
-        else:
-            processed_frame = np.zeros(frame.shape)
-            reward = 0
-        return frame.astype(float) / 255.0, reward, False, 1, processed_frame
-
         # Calculate current score:
         # Step 1: Apply Gaussian blur to decrease noise
         # Step 2: Apply binary threshold to binary seperate bright from dark spots
