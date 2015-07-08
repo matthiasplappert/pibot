@@ -74,12 +74,15 @@ class Agent(object):
         self.episode_counts[action] += 1
         self.steps += 1
         if self.steps % 100 == 0:
-            volt = gopigo.volt()
+            volt = -1.0
+            if gopigo_available:
+                volt = gopigo.volt()
             logging.info('performed %d steps\t%s\t%s\t%fV' % (self.steps, self.episode_counts, self.counts, volt))
             self.episode_counts[:] = 0
 
         if not gopigo_available:
             logging.info('simulating action %d' % action)
+            time.sleep(duration)
             return
         logging.info('performing action %d' % action)
 
