@@ -55,7 +55,7 @@ class Agent(object):
             return None
 
         # Read until buffer is full
-        for _ in xrange(6):
+        for _ in xrange(10):
             self.vc.grab()
 
         success, frame = self.vc.retrieve()
