@@ -41,7 +41,7 @@ def main(args):
             action = Action.IDLE
 
         start = timeit.default_timer()
-        frame, reward, terminal, lives, processed_frame = game.debug_step(action)
+        frame, reward, terminal, lives, processed_frame, light = game.debug_step(action)
         duration = timeit.default_timer() - start
 
         stdscr.clear()
@@ -50,11 +50,13 @@ def main(args):
         stdscr.addstr(2, 0, 'reward: %d' % reward)
         stdscr.addstr(3, 0, 'terminal: %s' % terminal)
         stdscr.addstr(4, 0, 'lives: %d' % lives)
-        stdscr.addstr(4, 0, 'perceive-action cycle duration: %fs' % duration)
+        stdscr.addstr(5, 0, 'light: %d' % light)
+        stdscr.addstr(6, 0, 'perceive-action cycle duration: %fs' % duration)
         stdscr.refresh()
 
         cv2.imshow('frame', frame)
-        cv2.imshow('processed-frame', processed_frame)
+        if processed_frame is not None:
+            cv2.imshow('processed-frame', processed_frame)
         cv2.waitKey(1)
         if args.interval > 0: time.sleep(args.interval)
 

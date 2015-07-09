@@ -20,13 +20,28 @@ class GameEnvironment(object):
 
     def step(self, action):
         # Reward should be either -1, 0, or 1
-        frame, reward, terminal, lives, _ = self.debug_step(action)
+        frame, reward, terminal, lives, _, _ = self.debug_step(action)
         return frame, reward, terminal, lives
 
     def debug_step(self, action):
         self.agent.perform_action(action)
         frame = self.agent.perceive(grayscale=self.grayscale, crop=self.crop, resize=self.resize)
 
+        # Calculate reward
+        #reward, processed_frame = self._reward_from_frame(frame)
+        reward, processed_frame = self._reward_from_light(), None
+
+        terminal = False
+        lives = 1
+        return frame.astype(float) / 255.0, reward, terminal, lives, processed_frame, self.agent.sense_light()
+
+    def _reward_from_light(self):
+        light = self.agent.sense_light()
+        if light > 80:
+            return 1
+        return 0
+
+    def _reward_from_frame(self, frame):
         # Calculate current score:
         # Step 1: Apply Gaussian blur to decrease noise
         # Step 2: Apply binary threshold to binary seperate bright from dark spots
@@ -41,9 +56,7 @@ class GameEnvironment(object):
         if score > 0.05:
             # At least 5% of the image are bright, reward the agent
             reward = 1
-        terminal = False
-        lives = 1
-        return frame.astype(float) / 255.0, reward, terminal, lives, processed_frame
+        return reward, processed_frame
 
     def get_actions(self):
         return self.agent.get_actions()
