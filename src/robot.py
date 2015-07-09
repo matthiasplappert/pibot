@@ -43,6 +43,13 @@ class Agent(object):
         self.vc.release()
         self.vc = None
 
+    def sense_light(self):
+        if not gopigo_available:
+            logging.info('simulating sense_light')
+            return 0
+        value = gopigo.analogRead(1)
+        return value
+
     def perceive(self, grayscale=True, crop=True, resize=(100, 100)):
         if self.vc is None:
             return None
