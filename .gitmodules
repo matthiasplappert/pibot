@@ -7,3 +7,6 @@
 [submodule "vendor/librekinect"]
 	path = vendor/librekinect
 	url = https://github.com/xxorde/librekinect.git
+[submodule "vendor/libfreenect"]
+	path = vendor/libfreenect
+	url = https://github.com/OpenKinect/libfreenect.git
