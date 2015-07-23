@@ -4,8 +4,8 @@
 ```
 sudo apt-get update
 sudo apt-get install python python-dev python-numpy python-scipy libopencv-dev python-opencv
-pip install pip --upgrade
-pip install -r requirements.txt
+sudo pip install pip --upgrade
+sudo pip install -r requirements.txt
 ```
 
 ## GoPiGo
