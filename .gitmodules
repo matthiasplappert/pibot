@@ -10,3 +10,6 @@
 [submodule "vendor/libfreenect"]
 	path = vendor/libfreenect
 	url = https://github.com/OpenKinect/libfreenect.git
+[submodule "vendor/gopigo"]
+	path = vendor/gopigo
+	url = https://github.com/DexterInd/GoPiGo.git
