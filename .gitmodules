@@ -4,3 +4,6 @@
 [submodule "vendor/dqn"]
 	path = vendor/dqn
 	url = https://github.com/soumith/deepmind-atari.git
+[submodule "vendor/librekinect"]
+	path = vendor/librekinect
+	url = https://github.com/xxorde/librekinect.git
