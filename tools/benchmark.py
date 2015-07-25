@@ -1,5 +1,6 @@
 import timeit
 
+import numpy as np
 import freenect
 import cv2
 
