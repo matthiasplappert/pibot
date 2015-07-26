@@ -2,10 +2,10 @@ import argparse
 import logging
 import time
 
+import freenect
 import cv2
 import numpy as np
 import Pyro4
-import freenect
 
 # Attempt to load gopigo, which is not available everywhere
 gopigo_available = True
