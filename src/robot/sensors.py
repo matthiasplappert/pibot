@@ -91,6 +91,10 @@ class Camera(Sensor):
 
 
 class KinectDepthCamera(Camera):
+    def __init__(self):
+        super(KinectDepthCamera, self).__init__()
+        self.convert_color = None
+        
     def _perceive(self):
         result = freenect.sync_get_depth()
         if result is None:
