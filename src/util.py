@@ -6,10 +6,6 @@ import Pyro4.naming
 import Pyro4.socketutil
 
 
-class Action(object):
-    IDLE, FORWARD, BACKWARD, TURN_LEFT, TURN_RIGHT = range(5)
-
-
 def pyro_event_loop(name, obj, timeout=3.0, host=None, port=9090, callback=None):
     Pyro4.config.SERVERTYPE = 'thread'
     if host is None:
