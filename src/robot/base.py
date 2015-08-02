@@ -1,12 +1,15 @@
 import logging
 import time
 
+import Pyro4
 # Attempt to load gopigo, which is not available when simulating the robot.
 gopigo_available = True
 try:
     import gopigo
 except ImportError:
     gopigo_available = False
+
+from util import pyro_event_loop
 
 
 class Action(object):
@@ -21,7 +24,8 @@ class Robot(object):
 
     def __enter__(self):
         for sensor in self.sensors:
-            sensor.open()
+            if not sensor.open():
+                return None
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -71,3 +75,17 @@ class Robot(object):
         action_call()
         time.sleep(self.action_duration)
         gopigo.stop()
+
+
+def run_robot(sensors, name, host, port):
+    Pyro4.config.SERIALIZERS_ACCEPTED.add('pickle')
+
+    print('initializing robot "%s" ...' % name)
+    with Robot(sensors) as robot:
+        if robot is None:
+            print('could not initialize robot')
+            return
+
+        print('starting event loop ...')
+        pyro_event_loop(name, robot, host=host, port=port)
+        print('shutting down robot ...')
