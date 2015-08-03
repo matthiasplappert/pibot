@@ -70,7 +70,6 @@ class Camera(Sensor):
         if data.ndim == 2:
             data = data.reshape(data.shape + (1,))
         assert data.ndim == 3
-        print data.shape
         if self.crop:
             image_shape = data.shape[:2]  # = (height, width)
             min_dim = np.min(image_shape)
