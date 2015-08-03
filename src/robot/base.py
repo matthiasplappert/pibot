@@ -17,20 +17,34 @@ class Action(object):
 
 
 class Robot(object):
-    def __init__(self, sensors):
-        self.sensors = sensors
+    def __init__(self):
+        self._sensors = []
         self.n_steps = 0
         self.action_duration = .01
 
-    def __enter__(self):
-        for sensor in self.sensors:
-            if not sensor.open():
-                return None
-        return self
+    @property
+    def sensors(self):
+        return self._sensors
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    @sensors.setter
+    def sensors(self, val):
+        self._sensors = val
+
+    def open(self):
         for sensor in self.sensors:
-            sensor.close()
+            if sensor.is_open:
+                continue
+            if not sensor.open():
+                return False
+        return True
+
+    def close(self):
+        for sensor in self.sensors:
+            if not sensor.is_open:
+                continue
+            if not sensor.close():
+                return False
+        return True
 
     def perceive(self):
         result = []
@@ -77,15 +91,11 @@ class Robot(object):
         gopigo.stop()
 
 
-def run_robot(sensors, name, host, port):
+def run_robot(name, host, port):
     Pyro4.config.SERIALIZERS_ACCEPTED.add('pickle')
 
     print('initializing robot "%s" ...' % name)
-    with Robot(sensors) as robot:
-        if robot is None:
-            print('could not initialize robot')
-            return
-
-        print('starting event loop ...')
-        pyro_event_loop(name, robot, host=host, port=port)
-        print('shutting down robot ...')
+    robot = Robot()
+    print('starting event loop ...')
+    pyro_event_loop(name, robot, host=host, port=port)
+    print('shutting down robot ...')
