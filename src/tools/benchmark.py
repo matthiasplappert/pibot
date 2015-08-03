@@ -3,13 +3,13 @@ import logging
 import timeit
 import random
 
-from game import GameEnvironment
+from learner.games import ObstacleAvoidanceGameEnvironment
 
 
 def main(args):
     print('preparing ...')
-    game = GameEnvironment(args.agent, args.host, args.port)
-    actions = game.get_actions()
+    game = ObstacleAvoidanceGameEnvironment(args.agent, args.host, args.port)
+    actions = game.actions
     game.step(actions[0])  # perform a single step to ensure everything is set up before measuring
 
     n_iter = args.n_iter
