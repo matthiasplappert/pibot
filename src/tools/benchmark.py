@@ -8,18 +8,21 @@ from learner.games import ObstacleAvoidanceGameEnvironment
 
 def main(args):
     print('preparing ...')
-    game = ObstacleAvoidanceGameEnvironment(args.agent, args.host, args.port)
-    actions = game.actions
-    game.step(actions[0])  # perform a single step to ensure everything is set up before measuring
+    with ObstacleAvoidanceGameEnvironment(args.agent, args.host, args.port) as game:
+        if not game:
+            print('could not create game')
+            return
+        actions = game.actions
+        game.step(actions[0])  # perform a single step to ensure everything is set up before measuring
 
-    n_iter = args.n_iter
-    print('performing %d iterations ...' % n_iter)
-    start = timeit.default_timer()
-    for _ in xrange(n_iter):
-        game.step(random.choice(actions))
-    duration = timeit.default_timer() - start
-    fps = int(float(n_iter) / duration)
-    print('total time: %fs (%dfps)' % (duration, fps))
+        n_iter = args.n_iter
+        print('performing %d iterations ...' % n_iter)
+        start = timeit.default_timer()
+        for _ in xrange(n_iter):
+            game.step(random.choice(actions))
+        duration = timeit.default_timer() - start
+        fps = int(float(n_iter) / duration)
+        print('total time: %fs (%dfps)' % (duration, fps))
 
 
 def get_parser():

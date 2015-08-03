@@ -21,7 +21,14 @@ class GameEnvironment(object):
                 uri += ':' + str(port)
         self.robot = Pyro4.Proxy(uri)
         self._configure_robot()
-        self.robot.open()
+
+    def __enter__(self):
+        if not self.robot.open():
+            return None
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.robot.close()
 
     def step(self, action):
         frame, reward, terminal, lives, _ = self.debug_step(action)
@@ -60,7 +67,7 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
         voltage.step_interval = 1000
 
         # Pass the configuration to the robot.
-        robot.sensors = [kinect, voltage]
+        self.robot.sensors = [kinect, voltage]
 
     def _compute_new_state(self, action, sensor_data):
         depth_data = sensor_data[0]
