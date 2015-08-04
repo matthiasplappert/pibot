@@ -4,7 +4,6 @@ import logging
 import Pyro4.core
 import Pyro4.naming
 import Pyro4.socketutil
-import freenect
 
 
 def pyro_event_loop(name, obj, timeout=3.0, host=None, port=9090, callback=None):
@@ -48,40 +47,3 @@ def pyro_event_loop(name, obj, timeout=3.0, host=None, port=9090, callback=None)
     nameserverDaemon.close()
     broadcastServer.close()
     daemon.close()
-
-
-class KinectDeviceManager(object):
-    context = None
-    device = None
-    count = 0
-
-    @staticmethod
-    def open():
-        KinectDeviceManager.count += 1
-        return True
-        # if KinectDeviceManager.count > 1:
-        #     return True
-        # context = freenect.init()
-        # if not context:
-        #     return False
-        # device = freenect.open_device(context, 0)
-        # if not device:
-        #     return False
-        # KinectDeviceManager.context = context
-        # KinectDeviceManager.device = device
-        # return True
-
-    @staticmethod
-    def close():
-        KinectDeviceManager.count -= 1
-        if KinectDeviceManager.count < 0:
-            raise RuntimeError('unbalanced open and close call')
-        elif KinectDeviceManager.count > 0:
-            return True
-
-        # freenect.close_device(KinectDeviceManager.device)
-        # freenect.shutdown(KinectDeviceManager.context)
-        # KinectDeviceManager.device = None
-        # KinectDeviceManager.context = None
-        freenect.sync_stop()
-        return True

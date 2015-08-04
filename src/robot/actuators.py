@@ -9,8 +9,6 @@ try:
 except ImportError:
     gopigo_available = False
 
-from util import KinectDeviceManager
-
 
 class Actuator(object):
     def __init__(self):
@@ -106,10 +104,7 @@ class SimulatedMotors(Motors):
 
 class KinectTiltMotor(Actuator):
     def _open(self):
-        return KinectDeviceManager.open()
-
-    def _close(self):
-        return KinectDeviceManager.close()
+        return freenect.sync_get_tilt_state() is not None
 
     @property
     def actions(self):
@@ -119,7 +114,7 @@ class KinectTiltMotor(Actuator):
         return freenect.sync_set_tilt_degs(action) == 0
 
 
-class LEDAction(object):
+class KinectLEDAction(object):
     OFF = freenect.LED_OFF
     GREEN = freenect.LED_GREEN
     RED = freenect.LED_RED
@@ -130,15 +125,12 @@ class LEDAction(object):
 
 class KinectLED(Actuator):
     def _open(self):
-        return KinectDeviceManager.open()
-
-    def _close(self):
-        return KinectDeviceManager.close()
+        return freenect.sync_get_tilt_state() is not None
 
     @property
     def actions(self):
-        return [LEDAction.OFF, LEDAction.GREEN, LEDAction.RED, LEDAction.YELLOW, LEDAction.BLINK_GREEN,
-                LEDAction.BLINK_RED_YELLOW]
+        return [KinectLEDAction.OFF, KinectLEDAction.GREEN, KinectLEDAction.RED, KinectLEDAction.YELLOW,
+                KinectLEDAction.BLINK_GREEN, KinectLEDAction.BLINK_RED_YELLOW]
 
     def _act(self, action):
         return freenect.sync_set_led(action) == 0
