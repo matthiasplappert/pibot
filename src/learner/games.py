@@ -4,8 +4,9 @@ import Pyro4
 import cv2
 import numpy as np
 
-from robot.base import Action
+import robot.actuators
 import robot.sensors
+from robot.actuators import MotorAction as Action
 
 
 class GameEnvironment(object):
@@ -35,7 +36,7 @@ class GameEnvironment(object):
         return frame, reward, terminal, lives
 
     def debug_step(self, action):
-        self.robot.perform_action(action)
+        self._act(action)
         sensor_data = self.robot.perceive()
         frame, reward, terminal, lives = self._compute_new_state(action, sensor_data)
         return frame, reward, terminal, lives, sensor_data
@@ -45,7 +46,10 @@ class GameEnvironment(object):
 
     @property
     def actions(self):
-        return self.robot.actions
+        raise NotImplementedError()
+
+    def _act(self, action):
+        raise NotImplementedError()
 
     def _configure_robot(self):
         raise NotImplementedError()
@@ -55,6 +59,13 @@ class GameEnvironment(object):
 
 
 class ObstacleAvoidanceGameEnvironment(GameEnvironment):
+    def actions(self):
+        return self.robot.actuators[0].actions
+
+    def _act(self, action):
+        actions = [action]
+        self.robot.act(actions)
+
     def _configure_robot(self):
         # Configure Kinect.
         kinect = robot.sensors.KinectDepthCamera()
@@ -66,8 +77,13 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
         voltage = robot.sensors.VoltageSensor()
         voltage.step_interval = 1000
 
+        # Configure motors
+        motors = robot.actuators.SimulatedMotors()
+        motors.action_duration = 0.05
+
         # Pass the configuration to the robot.
         self.robot.sensors = [kinect, voltage]
+        self.robot.actuators = [motors]
 
     def _compute_new_state(self, action, sensor_data):
         depth_data = sensor_data[0]
