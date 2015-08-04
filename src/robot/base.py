@@ -32,6 +32,11 @@ class Robot(object):
                 continue
             if not sensor.open():
                 return False
+        for actuator in self.actuators:
+            if actuator.is_open:
+                continue
+            if not actuator.open():
+                return False
         return True
 
     def close(self):
@@ -39,6 +44,11 @@ class Robot(object):
             if not sensor.is_open:
                 continue
             if not sensor.close():
+                return False
+        for actuator in self.actuators:
+            if not actuator.is_open:
+                continue
+            if not actuator.open():
                 return False
         return True
 

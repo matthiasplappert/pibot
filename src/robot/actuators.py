@@ -9,19 +9,48 @@ try:
 except ImportError:
     gopigo_available = False
 
+from util import KinectDeviceManager
+
 
 class Actuator(object):
+    def __init__(self):
+        self.is_open = False
+
     @property
     def actions(self):
         raise NotImplementedError()
 
+    def open(self):
+        if self.is_open or not self._open():
+            logging.warning('cannot open sensor %s' % self)
+            return False
+        self.is_open = True
+        return True
+
+    def close(self):
+        if not self.is_open or not self._close():
+            logging.warning('cannot close sensor %s' % self)
+            return False
+        self.is_open = False
+        return True
+
     def act(self, action):
-        if action not in self.actions:
+        if not self.is_open:
+            logging.warning('cannot act with closed actuator %s' % self)
             return False
         if action is None:
             # Do nothing, which is valid.
             return True
+        if action not in self.actions:
+            logging.warning('unknown action %s for actuator %s' % (action, self))
+            return False
         return self._act(action)
+
+    def _open(self):
+        return True
+
+    def _close(self):
+        return True
 
     def _act(self, action):
         raise NotImplementedError()
@@ -33,6 +62,7 @@ class MotorAction(object):
 
 class Motors(Actuator):
     def __init__(self):
+        super(Motors, self).__init__()
         self.duration = 0.05
 
     @property
@@ -75,6 +105,12 @@ class SimulatedMotors(Motors):
 
 
 class KinectTiltMotor(Actuator):
+    def _open(self):
+        return KinectDeviceManager.open()
+
+    def _close(self):
+        return KinectDeviceManager.close()
+
     @property
     def actions(self):
         return range(-20, 20)
@@ -93,10 +129,16 @@ class LEDAction(object):
 
 
 class KinectLED(Actuator):
+    def _open(self):
+        return KinectDeviceManager.open()
+
+    def _close(self):
+        return KinectDeviceManager.close()
+
     @property
     def actions(self):
         return [LEDAction.OFF, LEDAction.GREEN, LEDAction.RED, LEDAction.YELLOW, LEDAction.BLINK_GREEN,
                 LEDAction.BLINK_RED_YELLOW]
 
     def _act(self, action):
-        return freenect.sync_set_led(action)
+        return freenect.sync_set_led(action) == 0
