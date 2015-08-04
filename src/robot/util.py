@@ -63,7 +63,7 @@ class KinectDeviceManager(object):
         context = freenect.init()
         if not context:
             return False
-        device = freenect.open_device(context)
+        device = freenect.open_device(context, 0)
         if not device:
             return False
         KinectDeviceManager.context = context
