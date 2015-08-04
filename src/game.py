@@ -25,7 +25,7 @@ class GameEnvironment(object):
 
     def debug_step(self, action):
         self.agent.perform_action(action)
-        frame = self.agent.perceive(grayscale=self.grayscale, crop=self.crop, resize=self.resize)
+        frame = self.agent.perceive()
 
         # Calculate reward
         #reward, processed_frame = self._reward_from_frame(frame)
@@ -59,4 +59,4 @@ class GameEnvironment(object):
         return reward, processed_frame
 
     def get_actions(self):
-        return self.agent.get_actions()
+        return self.agent.actions

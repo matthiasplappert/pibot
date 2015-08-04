@@ -69,4 +69,5 @@ class Motors(Actuator):
 class SimulatedMotors(Motors):
     def _act(self, action):
         logging.info('simulating motor action %d' % action)
+        time.sleep(self.duration)
         return True
