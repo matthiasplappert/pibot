@@ -1,6 +1,7 @@
 import logging
 import time
 
+import freenect
 # Attempt to load gopigo, which is not available when simulating the robot.
 try:
     import gopigo
@@ -71,3 +72,31 @@ class SimulatedMotors(Motors):
         logging.info('simulating motor action %d' % action)
         time.sleep(self.duration)
         return True
+
+
+class KinectTiltMotor(Actuator):
+    @property
+    def actions(self):
+        return range(-20, 20)
+
+    def _act(self, action):
+        return freenect.sync_set_tilt_degs(action) == 0
+
+
+class LEDAction(object):
+    OFF = freenect.LED_OFF
+    GREEN = freenect.LED_GREEN
+    RED = freenect.LED_RED
+    YELLOW = freenect.LED_YELLOW
+    BLINK_GREEN = freenect.LED_BLINK_GREEN
+    BLINK_RED_YELLOW = freenect.LED_BLINK_RED_YELLOW
+
+
+class KinectLED(Actuator):
+    @property
+    def actions(self):
+        return [LEDAction.OFF, LEDAction.GREEN, LEDAction.RED, LEDAction.YELLOW, LEDAction.BLINK_GREEN,
+                LEDAction.BLINK_RED_YELLOW]
+
+    def _act(self, action):
+        return freenect.sync_set_led(action)
