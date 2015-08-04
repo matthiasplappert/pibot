@@ -1,6 +1,5 @@
 import logging
 
-import Pyro4
 import cv2
 import numpy as np
 
@@ -10,17 +9,8 @@ from robot.actuators import MotorAction as Action
 
 
 class GameEnvironment(object):
-    def __init__(self, name, host=None, port=None):
-        # Use pickle for serialization (because we serialize numpy arrays).
-        Pyro4.config.SERIALIZER = 'pickle'
-
-        # Connect to robot and configure it.
-        uri = 'PYRONAME:' + name
-        if host is not None:
-            uri += '@' + str(host)
-            if port is not None:
-                uri += ':' + str(port)
-        self.robot = Pyro4.Proxy(uri)
+    def __init__(self, r):
+        self.robot = r
         self._configure_robot()
 
     def __enter__(self):

@@ -3,12 +3,14 @@ import logging
 import timeit
 import random
 
+from robot.base import get_remote_robot
 from learner.games import ObstacleAvoidanceGameEnvironment
 
 
 def main(args):
     print('preparing ...')
-    with ObstacleAvoidanceGameEnvironment(args.agent, args.host, args.port) as game:
+    robot = get_remote_robot(args.agent, args.host, args.port)
+    with ObstacleAvoidanceGameEnvironment(robot) as game:
         if not game:
             print('could not create game')
             return

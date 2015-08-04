@@ -71,3 +71,16 @@ def run_robot(name, host, port):
     print('starting event loop ...')
     pyro_event_loop(name, robot, host=host, port=port)
     print('shutting down robot ...')
+
+
+def get_remote_robot(name, host, port):
+    # Use pickle for serialization (because we serialize numpy arrays).
+    Pyro4.config.SERIALIZER = 'pickle'
+
+    # Connect to robot and configure it.
+    uri = 'PYRONAME:' + name
+    if host is not None:
+        uri += '@' + str(host)
+        if port is not None:
+            uri += ':' + str(port)
+    return Pyro4.Proxy(uri)
