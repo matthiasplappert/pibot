@@ -61,8 +61,6 @@ class GameEnvironment(object):
 class ObstacleAvoidanceGameEnvironment(GameEnvironment):
     @property
     def actions(self):
-        print('actions called')
-        print self.robot.actuators
         return self.robot.actuators[0].actions
 
     def _act(self, action):
@@ -82,7 +80,7 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
 
         # Configure motors
         motors = robot.actuators.SimulatedMotors()
-        motors.duration = 0.1
+        motors.duration = 0.05
 
         # Pass the configuration to the robot.
         self.robot.sensors = [kinect, voltage]
