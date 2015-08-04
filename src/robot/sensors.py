@@ -97,10 +97,10 @@ class KinectDepthCamera(Camera):
         self.convert_color = None
 
     def _open(self):
-        return KinectDeviceManager.open() and freenect.start_depth(KinectDeviceManager.device) == 0
+        return KinectDeviceManager.open()
 
     def _close(self):
-        return freenect.stop_depth(KinectDeviceManager.device) == 0 and KinectDeviceManager.close()
+        return KinectDeviceManager.close()
 
     def _perceive(self):
         result = freenect.sync_get_depth()
@@ -111,16 +111,29 @@ class KinectDepthCamera(Camera):
 
 class KinectCamera(Camera):
     def _open(self):
-        return KinectDeviceManager.open() and freenect.start_video(KinectDeviceManager.device) == 0
+        return KinectDeviceManager.open()
 
     def _close(self):
-        return freenect.stop_video(KinectDeviceManager.device) == 0 and KinectDeviceManager.close()
+        return KinectDeviceManager.close()
 
     def _perceive(self):
         result = freenect.sync_get_video()
         if result is None:
             return None
         return result[0]  # result = (data, timestamp)
+
+
+class KinectTiltSensor(Sensor):
+    def _open(self):
+        return KinectDeviceManager.open()
+
+    def _close(self):
+        return KinectDeviceManager.close()
+
+    def _perceive(self):
+        state = freenect.sync_get_tilt_state()
+        acceleration = freenect.get_mks_accel(state)
+        return (state.tilt_angle, state.tilt_status) + acceleration
 
 
 class OpenCVCamera(Camera):

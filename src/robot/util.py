@@ -58,17 +58,18 @@ class KinectDeviceManager(object):
     @staticmethod
     def open():
         KinectDeviceManager.count += 1
-        if KinectDeviceManager.count > 1:
-            return True
-        context = freenect.init()
-        if not context:
-            return False
-        device = freenect.open_device(context, 0)
-        if not device:
-            return False
-        KinectDeviceManager.context = context
-        KinectDeviceManager.device = device
         return True
+        # if KinectDeviceManager.count > 1:
+        #     return True
+        # context = freenect.init()
+        # if not context:
+        #     return False
+        # device = freenect.open_device(context, 0)
+        # if not device:
+        #     return False
+        # KinectDeviceManager.context = context
+        # KinectDeviceManager.device = device
+        # return True
 
     @staticmethod
     def close():
@@ -78,8 +79,9 @@ class KinectDeviceManager(object):
         elif KinectDeviceManager.count > 0:
             return True
 
-        freenect.close_device(KinectDeviceManager.device)
-        freenect.shutdown(KinectDeviceManager.context)
-        KinectDeviceManager.device = None
-        KinectDeviceManager.context = None
+        # freenect.close_device(KinectDeviceManager.device)
+        # freenect.shutdown(KinectDeviceManager.context)
+        # KinectDeviceManager.device = None
+        # KinectDeviceManager.context = None
+        freenect.sync_stop()
         return True
