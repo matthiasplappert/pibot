@@ -97,10 +97,10 @@ class KinectDepthCamera(Camera):
         self.convert_color = None
 
     def _open(self):
-        return KinectDeviceManager.open() and freenect.start_depth(KinectDeviceManager.device)
+        return KinectDeviceManager.open() and freenect.start_depth(KinectDeviceManager.device) == 0
 
     def _close(self):
-        return freenect.stop_depth(KinectDeviceManager.device) and KinectDeviceManager.close()
+        return freenect.stop_depth(KinectDeviceManager.device) == 0 and KinectDeviceManager.close()
 
     def _perceive(self):
         result = freenect.sync_get_depth()
@@ -111,10 +111,10 @@ class KinectDepthCamera(Camera):
 
 class KinectCamera(Camera):
     def _open(self):
-        return KinectDeviceManager.open() and freenect.start_video(KinectDeviceManager.device)
+        return KinectDeviceManager.open() and freenect.start_video(KinectDeviceManager.device) == 0
 
     def _close(self):
-        return freenect.stop_video(KinectDeviceManager.device) and KinectDeviceManager.close()
+        return freenect.stop_video(KinectDeviceManager.device) == 0 and KinectDeviceManager.close()
 
     def _perceive(self):
         result = freenect.sync_get_video()
