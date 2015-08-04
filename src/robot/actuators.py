@@ -113,7 +113,7 @@ class KinectTiltMotor(Actuator):
 
     @property
     def actions(self):
-        return range(-20, 20)
+        return range(-20, 21)  # [-20, 20]
 
     def _act(self, action):
         return freenect.sync_set_tilt_degs(action) == 0
