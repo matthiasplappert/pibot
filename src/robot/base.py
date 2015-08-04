@@ -59,7 +59,7 @@ class Robot(object):
 
         self.n_steps += 1
         for idx, actuator in enumerate(self.actuators):
-            if not actuator.perform_action(actions[idx]):
+            if not actuator.act(actions[idx]):
                 logging.error('could not perform action on actuator %s' % actuator)
 
 
