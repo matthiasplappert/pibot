@@ -104,7 +104,7 @@ class KinectDepthCamera(Camera):
         return result[0]  # result = (data, timestamp)
 
 
-class KinectCamera(Camera):
+class KinectVideoCamera(Camera):
     def _open(self):
         return freenect.sync_get_tilt_state() is not None
 
