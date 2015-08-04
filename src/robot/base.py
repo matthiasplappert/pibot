@@ -48,7 +48,7 @@ class Robot(object):
         for actuator in self.actuators:
             if not actuator.is_open:
                 continue
-            if not actuator.open():
+            if not actuator.close():
                 return False
         return True
 
