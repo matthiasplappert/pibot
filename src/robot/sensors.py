@@ -9,6 +9,8 @@ try:
 except ImportError:
     gopigo_available = False
 
+from util import KinectDeviceManager
+
 
 class Sensor(object):
     def __init__(self):
@@ -94,6 +96,12 @@ class KinectDepthCamera(Camera):
         super(KinectDepthCamera, self).__init__()
         self.convert_color = None
 
+    def _open(self):
+        return KinectDeviceManager.open() and freenect.start_depth(KinectDeviceManager.device)
+
+    def _close(self):
+        return freenect.stop_depth(KinectDeviceManager.device) and KinectDeviceManager.close()
+
     def _perceive(self):
         result = freenect.sync_get_depth()
         if result is None:
@@ -102,6 +110,12 @@ class KinectDepthCamera(Camera):
 
 
 class KinectCamera(Camera):
+    def _open(self):
+        return KinectDeviceManager.open() and freenect.start_video(KinectDeviceManager.device)
+
+    def _close(self):
+        return freenect.stop_video(KinectDeviceManager.device) and KinectDeviceManager.close()
+
     def _perceive(self):
         result = freenect.sync_get_video()
         if result is None:
