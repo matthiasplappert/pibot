@@ -20,7 +20,15 @@ class Robot(object):
     def __init__(self):
         self._sensors = []
         self.n_steps = 0
-        self.action_duration = .01
+        self._action_duration = .01
+
+    @property
+    def action_duration(self):
+        return self._action_duration
+
+    @action_duration.setter
+    def action_duration(self, val):
+        self._action_duration = val
 
     @property
     def sensors(self):
