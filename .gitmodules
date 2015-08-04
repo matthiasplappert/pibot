@@ -4,9 +4,9 @@
 [submodule "vendor/dqn"]
 	path = vendor/dqn
 	url = https://github.com/soumith/deepmind-atari.git
-[submodule "vendor/librekinect"]
-	path = vendor/librekinect
-	url = https://github.com/xxorde/librekinect.git
 [submodule "vendor/gopigo"]
 	path = vendor/gopigo
 	url = https://github.com/DexterInd/GoPiGo.git
+[submodule "vendor/libfreenect"]
+	path = vendor/libfreenect
+	url = git@github.com:matthiasplappert/libfreenect.git
