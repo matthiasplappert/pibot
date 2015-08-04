@@ -59,7 +59,10 @@ class GameEnvironment(object):
 
 
 class ObstacleAvoidanceGameEnvironment(GameEnvironment):
+    @property
     def actions(self):
+        print('actions called')
+        print self.robot.actuators
         return self.robot.actuators[0].actions
 
     def _act(self, action):

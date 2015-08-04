@@ -34,6 +34,7 @@ class Motors(Actuator):
     def __init__(self):
         self.duration = 0.05
 
+    @property
     def actions(self):
         return [MotorAction.FORWARD, MotorAction.BACKWARD, MotorAction.IDLE, MotorAction.TURN_LEFT,
                 MotorAction.TURN_RIGHT]
