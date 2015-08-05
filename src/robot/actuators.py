@@ -68,6 +68,7 @@ class Motors(Actuator):
         if not gopigo_available:
             return False
         gopigo.set_speed(self.speed)
+        return True
 
     @property
     def actions(self):
