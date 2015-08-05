@@ -62,6 +62,12 @@ class Motors(Actuator):
     def __init__(self):
         super(Motors, self).__init__()
         self.duration = 0.05
+        self.speed = 150
+
+    def _open(self):
+        if not gopigo_available:
+            return False
+        gopigo.set_speed(self.speed)
 
     @property
     def actions(self):

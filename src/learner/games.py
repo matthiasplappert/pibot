@@ -69,7 +69,7 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
         voltage.step_interval = 1000
 
         # Configure motors
-        motors = robot.actuators.SimulatedMotors()
+        motors = robot.actuators.Motors()
         motors.duration = 0.05
 
         # Pass the configuration to the robot.
