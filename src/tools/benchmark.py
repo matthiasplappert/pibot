@@ -3,6 +3,9 @@ import logging
 import timeit
 import random
 
+import cv2
+
+from util.frame_convert import pretty_depth_cv
 from robot.base import get_remote_robot
 from learner.games import ObstacleAvoidanceGameEnvironment
 
@@ -20,8 +23,16 @@ def main(args):
         n_iter = args.n_iter
         print('performing %d iterations ...' % n_iter)
         start = timeit.default_timer()
-        for _ in xrange(n_iter):
-            game.step(random.choice(actions))
+        for i in xrange(n_iter):
+            frame, reward, terminal, lives = game.step(random.choice(actions))
+            if terminal:
+                print('resetting game ...')
+                game.reset()
+                continue
+            #frame *= 2047.
+            #cv2.cv.SaveImage('/Users/matze/Desktop/test/out_%.3d.png' % i, pretty_depth_cv(frame))
+            #print reward, terminal
+
         duration = timeit.default_timer() - start
         fps = int(float(n_iter) / duration)
         print('total time: %fs (%dfps)' % (duration, fps))
