@@ -10,10 +10,14 @@ function readAll(file)
 end
 
 function gameEnv:__init(_opt)
-    local py_src = readAll(_opt.game_path)
-    py.exec(py_src)
+    local game_src = readAll('../../learner/games.py')
+    local robot_src = readAll('../../robot/base.py')
+    py.exec(robot_src)
+    py.exec(game_src)
     -- TODO: make this configurable
-    py.exec('game = GameEnvironment(\'nn-robot\', host=\'192.168.1.4\', port=9090)')
+    py.exec('remote_robot = robot.base.get_remote_robot(\'nn-robot\', host=\'192.168.1.4\', port=9090)')
+    py.exec('game = ObstacleAvoidanceGameEnvironment(remote_robot)')
+    py.exec('game.__enter__()')
     
     local _opt = _opt or {}
     -- defaults to emulator speed
@@ -111,6 +115,7 @@ function gameEnv:newGame()
     while not terminal do
         obs, reward, terminal, lives = self:_randomStep()
     end
+    py.exec('game.reset()')  -- game was terminal, so reset it
     -- take one null action in the new game
     return self:_updateState(self:_step(0)):getState()
 end
@@ -142,5 +147,5 @@ end
 
 -- Function returns a table with valid actions in the current game.
 function gameEnv:getActions()
-    return py.eval('game.get_actions()')
+    return py.eval('game.actions')
 end
