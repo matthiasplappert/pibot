@@ -75,7 +75,7 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
         # Configure motors
         motors = robot.actuators.Motors()
         motors.duration = 0.05
-        motors.speed = 200
+        motors.speed = 150
 
         # Pass the configuration to the robot.
         self.robot.sensors = [kinect, voltage]
