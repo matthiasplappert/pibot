@@ -100,7 +100,6 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
         # - if the robot is not too close to an obstacle AND performs a non-forward action, do neither punish nor reward
         mean_depth = np.mean(depth_data[depth_data < KINECT_INVALID_DEPTH])
         is_too_close = np.isnan(mean_depth) or mean_depth < 500.
-        print mean_depth, is_too_close
         reward = 0
         if is_too_close:
             reward = -1
