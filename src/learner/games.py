@@ -2,10 +2,8 @@ import logging
 
 import numpy as np
 
-import robot.actuators
-import robot.sensors
-from robot.sensors import KINECT_INVALID_DEPTH
-from robot.actuators import MotorAction as Action
+from robot.sensors import KinectDepthCamera, KINECT_INVALID_DEPTH, VoltageSensor
+from robot.actuators import Motors, MotorAction, KinectTiltMotor, KinectLED, KinectLEDAction
 
 
 class GameEnvironment(object):
@@ -63,27 +61,27 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
 
     def _configure_robot(self):
         # Configure Kinect.
-        kinect = robot.sensors.KinectDepthCamera()
+        kinect = KinectDepthCamera()
         kinect.resize = (84, 84)
         kinect.crop = True
         kinect.convert_color = None
 
         # Configure voltage sensor. We only need this information for debug reasons, so only query very infrequently.
-        voltage = robot.sensors.VoltageSensor()
+        voltage = VoltageSensor()
         voltage.step_interval = 1000
 
         # Configure motors
-        motors = robot.actuators.Motors()
+        motors = Motors()
         motors.duration = 0.05
         motors.speed = 150
 
         # Pass the configuration to the robot.
         self.robot.sensors = [kinect, voltage]
-        self.robot.actuators = [motors, robot.actuators.KinectTiltMotor(), robot.actuators.KinectLED()]
+        self.robot.actuators = [motors, KinectTiltMotor(), KinectLED()]
 
     def _prepare_robot(self):
         # Tilt Kinect to 20 degrees and disable LED to avoid reflections.
-        self.robot.act([None, 20, robot.actuators.KinectLEDAction.OFF])
+        self.robot.act([None, 20, KinectLEDAction.OFF])
 
     def _compute_new_state(self, action, sensor_data):
         depth_data = sensor_data[0]
@@ -100,7 +98,7 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
         reward = 0
         if is_too_close:
             reward = -1
-        elif action == Action.FORWARD:
+        elif action == MotorAction.FORWARD:
             reward = 1
 
         # Prepare remaining values.
@@ -116,15 +114,15 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
         return float(n_depth_errors) / float(np.size(depth_data))
 
     def reset(self):
-        self.robot.act([None, None, robot.actuators.KinectLEDAction.RED])
+        self.robot.act([None, None, KinectLEDAction.RED])
         while True:
             depth_data = self.robot.perceive()[0]
             error_rate = self._compute_error_rate(depth_data)
             mean_depth = np.mean(depth_data[depth_data < KINECT_INVALID_DEPTH])
             if error_rate < 0.2 and not np.isnan(mean_depth) and mean_depth > 800:
                 break
-            self._act(Action.BACKWARD)
-        self.robot.act([None, None, robot.actuators.KinectLEDAction.OFF])
+            self._act(MotorAction.BACKWARD)
+        self.robot.act([None, None, KinectLEDAction.OFF])
 
 
 # class LightSeekingGameEnvironment(GameEnvironment):

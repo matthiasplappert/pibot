@@ -10,12 +10,18 @@ function readAll(file)
 end
 
 function gameEnv:__init(_opt)
-    local game_src = readAll('../../learner/games.py')
-    local robot_src = readAll('../../robot/base.py')
-    py.exec(robot_src)
-    py.exec(game_src)
+    py.exec('import os, imp')
+    py.exec('imp.load_source("robot", "../../robot/__init__.py")')
+    py.exec('imp.load_source("robot.actuators", "../../robot/actuators.py")')
+    py.exec('imp.load_source("robot.sensors", "../../robot/sensors.py")')
+    py.exec('imp.load_source("robot.base", "../../robot/base.py")')
+    py.exec('imp.load_source("learner", "../../learner/__init__.py")')
+    py.exec('imp.load_source("learner.games", "../../learner/games.py")')
+    py.exec('from robot.base import get_remote_robot')
+    py.exec('from learner.games import ObstacleAvoidanceGameEnvironment')
+    
     -- TODO: make this configurable
-    py.exec('remote_robot = robot.base.get_remote_robot(\'nn-robot\', host=\'192.168.1.4\', port=9090)')
+    py.exec('remote_robot = get_remote_robot(\'nn-robot\', host=\'192.168.1.4\', port=9090)')
     py.exec('game = ObstacleAvoidanceGameEnvironment(remote_robot)')
     py.exec('game.__enter__()')
     
