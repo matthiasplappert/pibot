@@ -10,6 +10,9 @@ except ImportError:
     gopigo_available = False
 
 
+KINECT_INVALID_DEPTH = 2047
+
+
 class Sensor(object):
     def __init__(self):
         self.step_interval = 1

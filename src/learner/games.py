@@ -1,10 +1,10 @@
 import logging
 
-import cv2
 import numpy as np
 
 import robot.actuators
 import robot.sensors
+from robot.sensors import KINECT_INVALID_DEPTH
 from robot.actuators import MotorAction as Action
 
 
@@ -16,6 +16,7 @@ class GameEnvironment(object):
     def __enter__(self):
         if not self.robot.open():
             return None
+        self._prepare_robot()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -44,6 +45,9 @@ class GameEnvironment(object):
     def _configure_robot(self):
         raise NotImplementedError()
 
+    def _prepare_robot(self):
+        pass
+
     def _compute_new_state(self, action, sensor_data):
         raise NotImplementedError()
 
@@ -54,7 +58,7 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
         return self.robot.actuators[0].actions
 
     def _act(self, action):
-        actions = [action]
+        actions = [action, None, None]
         self.robot.act(actions)
 
     def _configure_robot(self):
@@ -71,10 +75,18 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
         # Configure motors
         motors = robot.actuators.Motors()
         motors.duration = 0.05
+        motors.speed = 200
+
+        # Tilt motors
+        tilt_motor = robot.actuators.KinectTiltMotor()
 
         # Pass the configuration to the robot.
         self.robot.sensors = [kinect, voltage]
-        self.robot.actuators = [motors]
+        self.robot.actuators = [motors, tilt_motor]
+
+    def _prepare_robot(self):
+        # Tilt Kinect to 20 degrees and disable LED to avoid reflections.
+        self.robot.act([None, 20, robot.actuators.KinectLEDAction.OFF])
 
     def _compute_new_state(self, action, sensor_data):
         depth_data = sensor_data[0]
@@ -82,13 +94,13 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
         if voltage is not None:
             logging.info('system voltage is %fV' % voltage)
 
-        # TODO: Calculate histogram and figure out if we are close to an obstacle
-        is_too_close = False
-
         # We reward as follows:
         # - if the robot is too close to an obstacle, every action is punished
         # - if the robot is not too close to an obstacle AND performs a forward action, reward
         # - if the robot is not too close to an obstacle AND performs a non-forward action, do neither punish nor reward
+        mean_depth = np.mean(depth_data[depth_data < KINECT_INVALID_DEPTH])
+        is_too_close = np.isnan(mean_depth) or mean_depth < 500.
+        print mean_depth, is_too_close
         reward = 0
         if is_too_close:
             reward = -1
@@ -96,23 +108,27 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
             reward = 1
 
         # Prepare remaining values.
-        frame = depth_data.astype('float32') / 4027.0
-        terminal = False
+        terminal = self._compute_error_rate(depth_data) > .8
+        depth_data[depth_data == KINECT_INVALID_DEPTH] = 0  # replace errors with 0 -> assume very close approximity for errors
+        frame = depth_data.astype('float32') / KINECT_INVALID_DEPTH
         lives = 1 if not terminal else 0
 
         return frame, reward, terminal, lives
 
     def _compute_error_rate(self, depth_data):
-        n_depth_errors = np.sum(depth_data == 4027)
+        n_depth_errors = np.sum(depth_data == KINECT_INVALID_DEPTH)
         return float(n_depth_errors) / float(np.size(depth_data))
 
     def reset(self):
+        self.robot.act([None, None, robot.actuators.KinectLEDAction.RED])
         while True:
             depth_data = self.robot.perceive()[0]
             error_rate = self._compute_error_rate(depth_data)
-            if error_rate < 0.2:
+            mean_depth = np.mean(depth_data[depth_data < KINECT_INVALID_DEPTH])
+            if error_rate < 0.2 and not np.isnan(mean_depth) and mean_depth > 800:
                 break
-            self.robot.perform_action(Action.BACKWARD)
+            self._act(Action.BACKWARD)
+        self.robot.act([None, None, robot.actuators.KinectLEDAction.OFF])
 
 
 # class LightSeekingGameEnvironment(GameEnvironment):
