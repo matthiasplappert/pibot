@@ -77,12 +77,9 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
         motors.duration = 0.05
         motors.speed = 200
 
-        # Tilt motors
-        tilt_motor = robot.actuators.KinectTiltMotor()
-
         # Pass the configuration to the robot.
         self.robot.sensors = [kinect, voltage]
-        self.robot.actuators = [motors, tilt_motor]
+        self.robot.actuators = [motors, robot.actuators.KinectTiltMotor(), robot.actuators.KinectLED()]
 
     def _prepare_robot(self):
         # Tilt Kinect to 20 degrees and disable LED to avoid reflections.
