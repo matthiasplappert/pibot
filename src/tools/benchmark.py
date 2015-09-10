@@ -29,9 +29,9 @@ def main(args):
                 print('resetting game ...')
                 game.reset()
                 continue
-            #frame *= 2047.
-            #cv2.cv.SaveImage('/Users/matze/Desktop/test/out_%.3d.png' % i, pretty_depth_cv(frame))
-            #print reward, terminal
+            # frame *= 2047.
+            # cv2.cv.SaveImage('/Users/matze/Desktop/test/out_%.3d.png' % i, pretty_depth_cv(frame))
+            # print reward, terminal
 
         duration = timeit.default_timer() - start
         fps = int(float(n_iter) / duration)

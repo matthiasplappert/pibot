@@ -3,7 +3,7 @@ import logging
 import numpy as np
 
 from robot.sensors import KinectDepthCamera, KINECT_INVALID_DEPTH, VoltageSensor
-from robot.actuators import Motors, MotorAction, KinectTiltMotor, KinectLED, KinectLEDAction
+from robot.actuators import Motors, SimulatedMotors, MotorAction, KinectTiltMotor, KinectLED, KinectLEDAction
 
 
 class GameEnvironment(object):
