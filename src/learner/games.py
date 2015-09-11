@@ -115,7 +115,7 @@ class ObstacleAvoidanceGameEnvironment(GameEnvironment):
 
     def reset(self):
         self.robot.act([None, None, KinectLEDAction.RED])
-        while True:
+        for _ in xrange(50):
             depth_data = self.robot.perceive()[0]
             error_rate = self._compute_error_rate(depth_data)
             mean_depth = np.mean(depth_data[depth_data < KINECT_INVALID_DEPTH])
