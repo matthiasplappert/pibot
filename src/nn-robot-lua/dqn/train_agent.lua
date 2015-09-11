@@ -60,6 +60,7 @@ end
 
 local learn_start = agent.learn_start
 local start_time = sys.clock()
+local episode_start_time = sys.clock()
 local reward_counts = {}
 local episode_counts = {}
 local time_history = {}
@@ -75,7 +76,6 @@ local nrewards
 local nepisodes
 local episode_reward
 
-local train_reward = 0
 local screen, reward, terminal = game_env:getState()
 
 print("Iteration ..", step)
@@ -93,19 +93,20 @@ while step < opt.steps do
             screen, reward, terminal = game_env:newGame()
         end
     end
-    if reward ~= 0 then
-        print("current reward: ", reward)
-    end
-    train_reward = train_reward + reward
 
     if step % opt.prog_freq == 0 then
         assert(step==agent.numSteps, 'trainer step: ' .. step ..
                 ' & agent.numSteps: ' .. agent.numSteps)
-        print("Steps: ", step)
-        print("Reward: ", train_reward)
-        train_reward = 0
         agent:report()
+        total_time = sys.clock() - start_time
+        episode_time = sys.clock() - episode_start_time
+        print(string.format(
+            '\nSteps: %d (frames: %d), total time: %ds (%dfps), episode time: %ds (%dfps), ' ..
+            'epsilon: %.2f, lr: %G',
+            step, step*opt.actrep, total_time, step*opt.actrep/total_time, episode_time,
+            opt.prog_freq*opt.actrep/episode_time, agent.ep, agent.lr))
         collectgarbage()
+        episode_start_time = sys.clock()
     end
 
     if step%1000 == 0 then collectgarbage() end
