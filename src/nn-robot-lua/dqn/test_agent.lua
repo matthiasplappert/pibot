@@ -81,8 +81,8 @@ local curr_score = 0
 while game_count < opt.games do
     -- Save state
     curr_score = curr_score + reward
-    frame = screen:reshape(3, 210, 160)  -- TODO: make this not hardcoded
-    table.insert(curr_game, frame)
+    -- frame = screen:reshape(3, 210, 160)  -- TODO: make this not hardcoded
+    -- table.insert(curr_game, frame)
     
     step = step + 1
     game_step = game_step + 1
@@ -108,6 +108,6 @@ while game_count < opt.games do
 end
 
 print('played ' .. step .. ' steps and ' .. game_count .. ' games. Saving best game ...')
-for idx, frame in pairs(best_game) do
-    image.save(output_path .. 'step-' .. idx .. '.png', frame)
-end
+-- for idx, frame in pairs(best_game) do
+--     image.save(output_path .. 'step-' .. idx .. '.png', frame)
+-- end
