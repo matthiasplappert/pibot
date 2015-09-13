@@ -7,10 +7,10 @@ ENV=$1
 FRAMEWORK="alewrap"
 
 # Update these arguments to continue training
-eps_start=0.82
-eps_endt=78000
-steps=178000
-netfile="\"DQN3_0_1_kinect1_FULL_Y_22000.t7\""
+eps_start=0.76
+eps_endt=69500
+steps=169500
+netfile="\"DQN3_0_1_kinect2_FULL_Y_8500.t7\""
 
 # Other arguments
 game_path=$PWD"/../game.py"
