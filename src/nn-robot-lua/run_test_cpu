@@ -10,7 +10,7 @@ game_path=$PWD"/../game.py"
 env_params="useRGB=true"
 agent="NeuralQLearner"
 n_replay=1
-netfile="\"DQN3_0_1_motte2_FULL_Y.t7\""
+netfile="\"DQN3_0_1_kinect1_FULL_Y_22000.t7\""
 #netfile="\"convnet_atari3\""
 update_freq=4
 actrep=4
