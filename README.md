@@ -1,6 +1,6 @@
 # PiBot
 
-![pibot](https://raw.githubusercontent.com/matthiasplappert/pibot/master/assets/pibot.jpg)
+![pibot](/assets/pibot.jpg?raw=true)
 A simple robot platform with extensible sensors written in Python and controllable over Wifi.
 
 ## Hardware
