@@ -56,7 +56,7 @@ def main(args):
 
 
 def get_parser():
-    parser = argparse.ArgumentParser(description='Benchmark for nn-robot.')
+    parser = argparse.ArgumentParser(description='Benchmark for PiBot.')
     parser.add_argument('--host', help='host of the robot, e.g. 192.168.1.2', type=str, default=None)
     parser.add_argument('--port', help='port of the robot, e.g. 9090', type=int, default=9090)
     parser.add_argument('--n-iter', help='number of iterations to perform', type=int, default=100)

@@ -9,8 +9,8 @@ def main(args):
 
 
 def get_parser():
-    parser = argparse.ArgumentParser(description='Run nn-robot.')
-    parser.add_argument('--name', help='name of the robot', default='nn-robot')
+    parser = argparse.ArgumentParser(description='Run PiBot.')
+    parser.add_argument('--name', help='name of the robot', default='pibot')
     parser.add_argument('--port', help='port of the robot on the network', default=9090, type=int)
     parser.add_argument('--host', help='host of the robot on the network', default=None, type=str)
     return parser

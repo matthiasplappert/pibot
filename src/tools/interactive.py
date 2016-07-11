@@ -26,19 +26,18 @@ def main(args):
         except:
             key = ''
 
-        # if key == 'KEY_UP':
-        #     action = Action.FORWARD
-        # elif key == 'KEY_DOWN':
-        #     action = Action.BACKWARD
-        # elif key == 'KEY_LEFT':
-        #     action = Action.TURN_LEFT
-        # elif key == 'KEY_RIGHT':
-        #     action = Action.TURN_RIGHT
-        # elif key.upper() == 'X':
-        #     break
-        # else:
-        #     action = Action.IDLE
-        action = 0
+        if key == 'KEY_UP':
+            action = Action.FORWARD
+        elif key == 'KEY_DOWN':
+            action = Action.BACKWARD
+        elif key == 'KEY_LEFT':
+            action = Action.TURN_LEFT
+        elif key == 'KEY_RIGHT':
+            action = Action.TURN_RIGHT
+        elif key.upper() == 'X':
+            break
+        else:
+            action = Action.IDLE
 
         start = timeit.default_timer()
         frame, reward, terminal, lives, processed_frame, light = game.debug_step(action)
@@ -66,7 +65,7 @@ def main(args):
 
 
 def get_parser():
-    parser = argparse.ArgumentParser(description='Server for nn-robot.')
+    parser = argparse.ArgumentParser(description='Server for PiBot.')
     parser.add_argument('--host', help='host of the robot, e.g. 192.168.1.2', type=str, default=None)
     parser.add_argument('--port', help='port of the robot, e.g. 9090', type=int, default=9090)
     parser.add_argument('--interval', help='update interval in seconds', type=int, default=0)
