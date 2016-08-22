@@ -16,41 +16,41 @@ def main(args):
     kinect_tilt_sensor = KinectTiltSensor()
     kinect_tilt_motor = KinectTiltMotor()
     kinect_led = KinectLED()
-    robot.sensors = [kinect_depth_cam, kinect_video_cam, kinect_tilt_sensor]
+    robot.sensors = [kinect_tilt_sensor, kinect_video_cam]
     robot.actuators = [kinect_tilt_motor, kinect_led]
     robot.open()
 
-    print('switching LEDs ...')
-    for action in kinect_led.actions:
-        print '\t' + str(action)
-        robot.act([None, action])
-        time.sleep(1)
+    # print('switching LEDs ...')
+    # for action in kinect_led.actions:
+    #     print '\t' + str(action)
+    #     robot.act([None, action])
+    #     time.sleep(1)
 
-    print('\nmoving tilt motor ...')
-    print('\t+20 degrees')
-    robot.act([20, None])
-    time.sleep(3)
-    print('\t-20 degrees')
-    robot.act([-20, None])
-    time.sleep(3)
-    print('\t  0 degrees')
-    robot.act([0, None])
-    time.sleep(3)
+    # print('\nmoving tilt motor ...')
+    # print('\t+20 degrees')
+    # robot.act([20, None])
+    # time.sleep(3)
+    # print('\t-20 degrees')
+    # robot.act([-20, None])
+    # time.sleep(3)
+    # print('\t  0 degrees')
+    # robot.act([0, None])
+    # time.sleep(3)
 
     print('\nreading tilt status ...')
     for _ in xrange(10):
-        print '\t' + str(robot.perceive()[2])
+        print '\t' + str(robot.perceive()[0])
         time.sleep(1)
 
-    print('\nreading depth frames ...')
-    for _ in xrange(10):
-        print '\t' + str(np.mean(robot.perceive()[0]))
-        time.sleep(1)
+    # print('\nreading depth frames ...')
+    # for _ in xrange(10):
+    #     print '\t' + str(np.mean(robot.perceive()[0]))
+    #     time.sleep(1)
 
-    print('\nreading video frames ...')
-    for _ in xrange(10):
-        print '\t' + str(np.mean(robot.perceive()[1]))
-        time.sleep(1)
+    # print('\nreading video frames ...')
+    # for _ in xrange(10):
+    #     print '\t' + str(np.mean(robot.perceive()[1]))
+    #     time.sleep(1)
 
     robot.close()
 

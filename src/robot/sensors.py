@@ -1,8 +1,11 @@
 import logging
 
 import numpy as np
-import freenect
-import cv2
+try:
+    import freenect
+    import cv2
+except ImportError:
+    pass
 try:
     import gopigo
     gopigo_available = True
@@ -58,9 +61,9 @@ class Sensor(object):
 class Camera(Sensor):
     def __init__(self):
         super(Camera, self).__init__()
-        self.convert_color = cv2.COLOR_BGR2RGB
         self.crop = True
         self.resize = (100, 100)
+        self.convert_color = 4L
 
     def _process_data(self, data):
         assert data is not None
