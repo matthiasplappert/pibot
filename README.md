@@ -12,7 +12,15 @@ A simple robot platform with extensible sensors written in Python and controllab
 - A battery pack of your choice. I use 10 AA rechargeable batteries since the Kinect requires at least 12V or it will just randomly shut down during operation, especially if the motors are also running. I use eneloop batteries, which are awesome. I get approx. 2 hours of a set of fully charged batteries.
 - Some soldering equipment and patience to put it all together.
 
-## Installation
+## Installation on Client
+
+Simply run the following command to install all dependencies:
+```
+pip install -r requirements.txt
+```
+That's it.
+
+## Installation on Raspberry Pi
 
 ### Basics
 ```
@@ -63,3 +71,18 @@ TODO: Describe udev rule stuff
 
 ### WiFi
 TODO
+
+## Running the Robot
+First, connect to the robot over SSH and start it:
+```
+ssh pi@<ip_of_your_raspberry>
+cd pibot/src
+sudo python run_robot.py
+```
+
+Next, you can try out the robot locally by using one of the `test_` files. You always need to specify
+the robot's name, which is printed once you start the robot, and probably also the host of the robot depending on
+your network configuration. A simple example would be:
+```
+python test_motors pibot --host <ip_of_your_raspberry>
+```
