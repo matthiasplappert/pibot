@@ -84,5 +84,5 @@ Next, you can try out the robot locally by using one of the `test_` files. You a
 the robot's name, which is printed once you start the robot, and probably also the host of the robot depending on
 your network configuration. A simple example would be:
 ```
-python test_motors pibot --host <ip_of_your_raspberry>
+python test_motors.py pibot --host <ip_of_your_raspberry>
 ```
