@@ -1,7 +1,11 @@
 import logging
 import time
 
-import freenect
+try:
+    import freenect
+    import cv2
+except ImportError:
+    pass
 # Attempt to load gopigo, which is not available when simulating the robot.
 try:
     import gopigo
@@ -61,7 +65,6 @@ class MotorAction(object):
 class Motors(Actuator):
     def __init__(self):
         super(Motors, self).__init__()
-        self.duration = 0.05
         self.speed = 150
 
     def _open(self):
@@ -97,15 +100,12 @@ class Motors(Actuator):
         # Perform action for `duration` seconds and stop afterwards.
         logging.info('performing motor action %d' % action)
         action_call()
-        time.sleep(self.duration)
-        gopigo.stop()
         return True
 
 
 class SimulatedMotors(Motors):
     def _act(self, action):
         logging.info('simulating motor action %d' % action)
-        time.sleep(self.duration)
         return True
 
 
@@ -122,12 +122,12 @@ class KinectTiltMotor(Actuator):
 
 
 class KinectLEDAction(object):
-    OFF = freenect.LED_OFF
-    GREEN = freenect.LED_GREEN
-    RED = freenect.LED_RED
-    YELLOW = freenect.LED_YELLOW
-    BLINK_GREEN = freenect.LED_BLINK_GREEN
-    BLINK_RED_YELLOW = freenect.LED_BLINK_RED_YELLOW
+    OFF = 0
+    GREEN = 1
+    RED = 2
+    YELLOW = 3
+    BLINK_GREEN = 4
+    BLINK_RED_YELLOW = 5
 
 
 class KinectLED(Actuator):
@@ -140,4 +140,20 @@ class KinectLED(Actuator):
                 KinectLEDAction.BLINK_GREEN, KinectLEDAction.BLINK_RED_YELLOW]
 
     def _act(self, action):
+        kinect_action = None
+        if action == KinectLEDAction.OFF:
+            kinect_action = freenect.LED_OFF
+        elif action == KinectLEDAction.GREEN:
+            kinect_action = freenect.LED_GREEN
+        elif action == KinectLEDAction.RED:
+            kinect_action = freenect.LED_RED
+        elif action == KinectLEDAction.YELLOW:
+            kinect_action = freenect.LED_YELLOW
+        elif action == KinectLEDAction.BLINK_GREEN:
+            kinect_action = freenect.LED_BLINK_GREEN
+        elif action == KinectLEDAction.BLINK_RED_YELLOW:
+            kinect_action = freenect.LED_BLINK_RED_YELLOW
+        else:
+            raise RuntimeError('Unknown action {}.'.format(action))
+        assert kinect_action is not None
         return freenect.sync_set_led(action) == 0
